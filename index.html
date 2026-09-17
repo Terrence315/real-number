@@ -1,0 +1,89 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Real Number Properties Practice</title>
+<style>
+body{font-family:Arial,sans-serif;margin:0;background:#f3f5f7;color:#1f2933}
+header{padding:24px;background:#243746;color:white} main{max-width:980px;margin:auto;padding:20px}
+.card{background:white;padding:18px;margin:14px 0;border-radius:10px;box-shadow:0 2px 8px #0001}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
+.note{background:#eef2f5;padding:12px;border-radius:8px}
+.choice{display:block;width:100%;text-align:left;padding:10px;margin:6px 0;border:0;border-radius:7px;background:#edf1f5;cursor:pointer}
+.good{background:#d9f2df} .bad{background:#f8d7da}
+.selected{outline:3px solid #243746;background:#dfe8ef}
+.feedback{font-weight:600}
+.bar{position:sticky;bottom:0;background:white;border-top:1px solid #bbb;padding:12px}
+button{padding:8px 12px;border-radius:7px;border:1px solid #bbb;cursor:pointer}
+</style></head>
+<body><header><h1>Real Number Properties</h1><p>Mathematics 700 Fundamentals - Interactive Practice</p></header>
+<main><div class="card"><h2>Quick Notes</h2><div class="grid">
+<div class="note"><b>Commutative</b><br>Change the order.<br>Addition and multiplication only.</div>
+<div class="note"><b>Associative</b><br>Change the grouping.<br>Addition and multiplication only.</div>
+<div class="note"><b>Additive Identity</b><br>0<br>a + 0 = a</div>
+<div class="note"><b>Multiplicative Identity</b><br>1<br>a x 1 = a</div>
+</div><p><b>Calculation tip:</b> Look for numbers that can be grouped to make convenient multiples of 5 or 10.</p></div>
+<div id="quiz"></div><div id="finalFeedback" class="card" style="display:none"></div>
+<div class="bar"><b id="score">Answered: 0 / 20</b>
+<button id="submitBtn" onclick="submitAssignment()" style="background:#243746;color:white;font-weight:bold">Submit Assignment</button>
+<button onclick="resetQuiz()">Reset</button><span id="warning" style="color:#b42318;font-weight:bold"></span></div></main>
+<script>
+const qs=[{"q": "1. Which property is shown by 3 + (-6) = -6 + 3?", "opts": ["Commutative property of addition", "Associative property of addition", "Additive identity", "Commutative property of multiplication"], "a": 0, "exp": "The addends switch order, but the sum does not change."}, {"q": "2. Which property is shown by (46 + 17) + 3 = 46 + (17 + 3)?", "opts": ["Associative property of addition", "Commutative property of addition", "Additive identity", "Associative property of multiplication"], "a": 0, "exp": "Only the grouping changes in an addition expression."}, {"q": "3. Which property is shown by 7 x 1 = 7?", "opts": ["Multiplicative identity", "Additive identity", "Commutative property", "Associative property"], "a": 0, "exp": "Multiplying by 1 leaves the number unchanged."}, {"q": "4. Which statement represents the commutative property of multiplication?", "opts": ["a x b = b x a", "a + b = b + a", "a x 1 = a", "a + 0 = a"], "a": 0, "exp": "The factors change order without changing the product."}, {"q": "5. Which statement uses the multiplicative identity?", "opts": ["c x 1 = c", "c + 0 = c", "c x 0 = 0", "c + 1 = c + 1"], "a": 0, "exp": "The multiplicative identity is 1."}, {"q": "6. Which operation is NOT commutative?", "opts": ["Division", "Addition", "Multiplication", "Both addition and multiplication"], "a": 0, "exp": "Changing the order in division can change the quotient."}, {"q": "7. Which statement uses the additive identity?", "opts": ["4 + 0 = 4", "3 + 7 = 7 + 3", "(3 + 7) + 8 = 3 + (7 + 8)", "4 x 1 = 4"], "a": 0, "exp": "The additive identity is 0."}, {"q": "8. Which property is shown by (-2 x -8) x 9 = -2 x (-8 x 9)?", "opts": ["Associative property of multiplication", "Commutative property of multiplication", "Multiplicative identity", "Associative property of addition"], "a": 0, "exp": "The factors stay in the same order while the grouping changes."}, {"q": "9. Why is (8 - 10) - 5 = 8 - (10 - 5) NOT a valid use of the associative property?", "opts": ["The associative property does not apply to subtraction", "The numbers must be positive", "Parentheses cannot be moved", "The identity property must be used first"], "a": 0, "exp": "The associative property in this lesson applies to addition and multiplication, not subtraction."}, {"q": "10. Which property is shown by 5 x 4 = 4 x 5?", "opts": ["Commutative property of multiplication", "Associative property of multiplication", "Multiplicative identity", "Additive identity"], "a": 0, "exp": "The factors switch order."}, {"q": "11. Which property is shown by 8 + 0 = 8?", "opts": ["Additive identity", "Multiplicative identity", "Associative property of addition", "Commutative property of addition"], "a": 0, "exp": "Adding 0 does not change the value."}, {"q": "12. Which property is shown by 9 + (3 + 4) = (9 + 3) + 4?", "opts": ["Associative property of addition", "Commutative property of addition", "Additive identity", "Multiplicative identity"], "a": 0, "exp": "The addends keep their order while the grouping changes."}, {"q": "13. Which property is shown by (5 x 2) x 3 = 5 x (2 x 3)?", "opts": ["Associative property of multiplication", "Commutative property of multiplication", "Multiplicative identity", "Additive identity"], "a": 0, "exp": "The grouping of the factors changes."}, {"q": "14. Which property can help rewrite 13 + (7 + 11) as (13 + 7) + 11?", "opts": ["Associative property of addition", "Commutative property of addition", "Additive identity", "Multiplicative identity"], "a": 0, "exp": "The grouping changes so 13 and 7 can be added first."}, {"q": "15. To simplify (4 x 7) x 5 efficiently, which property can first rewrite it as (7 x 4) x 5?", "opts": ["Commutative property of multiplication", "Associative property of multiplication", "Multiplicative identity", "Additive identity"], "a": 0, "exp": "The order of 4 and 7 is switched."}, {"q": "16. After rewriting (7 x 4) x 5, which property can rewrite it as 7 x (4 x 5)?", "opts": ["Associative property of multiplication", "Commutative property of multiplication", "Multiplicative identity", "Additive identity"], "a": 0, "exp": "The grouping changes so 4 x 5 can be calculated first."}, {"q": "17. What is the additive identity?", "opts": ["0", "1", "-1", "10"], "a": 0, "exp": "Zero can be added to a number without changing its value."}, {"q": "18. What is the multiplicative identity?", "opts": ["1", "0", "-1", "2"], "a": 0, "exp": "One can be multiplied by a number without changing its value."}, {"q": "19. Which pair of operations supports both the commutative and associative properties in this lesson?", "opts": ["Addition and multiplication", "Subtraction and division", "Addition and subtraction", "Multiplication and division"], "a": 0, "exp": "Both properties apply to addition and multiplication."}, {"q": "20. Which strategy can make mental calculation easier?", "opts": ["Group numbers that make multiples of 5 or 10", "Always subtract first", "Always divide first", "Avoid regrouping numbers"], "a": 0, "exp": "The lesson recommends looking for convenient pairs such as sums or products that make multiples of 5 or 10."}];
+let selections=Array(qs.length).fill(null), submitted=false;
+function render(){
+ const root=document.getElementById('quiz'); root.innerHTML='';
+ qs.forEach((x,i)=>{
+   const d=document.createElement('div'); d.className='card'; d.id='q'+i;
+   d.innerHTML=`<h3>${x.q}</h3><div class="options"></div><p class="feedback"></p>`;
+   x.opts.forEach((o,j)=>{
+     const b=document.createElement('button'); b.className='choice';
+     b.textContent=String.fromCharCode(65+j)+'. '+o;
+     b.onclick=()=>selectAnswer(d,b,i,j);
+     d.querySelector('.options').appendChild(b);
+   });
+   root.appendChild(d);
+ });
+ update();
+}
+function selectAnswer(card,button,i,j){
+ if(submitted)return;
+ selections[i]=j;
+ [...card.querySelectorAll('.choice')].forEach((b,k)=>b.classList.toggle('selected',k===j));
+ document.getElementById('warning').textContent='';
+ update();
+}
+function update(){
+ const n=selections.filter(v=>v!==null).length;
+ document.getElementById('score').textContent=`Answered: ${n} / ${qs.length}`;
+}
+function submitAssignment(){
+ if(submitted)return;
+ const missing=selections.filter(v=>v===null).length;
+ if(missing){
+   document.getElementById('warning').textContent=` Please answer all questions first (${missing} remaining).`;
+   return;
+ }
+ submitted=true; let score=0;
+ qs.forEach((x,i)=>{
+   const card=document.getElementById('q'+i), bs=[...card.querySelectorAll('.choice')], chosen=selections[i];
+   bs.forEach(b=>{b.disabled=true;b.classList.remove('selected')});
+   bs[x.a].classList.add('good');
+   const fb=card.querySelector('.feedback');
+   if(chosen===x.a){score++;fb.textContent='✓ Correct. '+x.exp;}
+   else{bs[chosen].classList.add('bad');fb.textContent='✗ Review: '+x.exp;}
+ });
+ const pct=Math.round(score/qs.length*100);
+ const box=document.getElementById('finalFeedback');
+ box.style.display='block';
+ box.innerHTML=`<h2>Assignment Feedback</h2><p><b>Final Score: ${score} / ${qs.length} (${pct}%)</b></p><p>Feedback is now shown under every question. Green marks the correct answer; red marks an incorrect answer you selected.</p>`;
+ document.getElementById('score').textContent=`Final Score: ${score} / ${qs.length}`;
+ document.getElementById('submitBtn').disabled=true;
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function resetQuiz(){
+ selections=Array(qs.length).fill(null);submitted=false;
+ document.getElementById('finalFeedback').style.display='none';
+ document.getElementById('warning').textContent='';
+ document.getElementById('submitBtn').disabled=false;
+ render();window.scrollTo(0,0);
+}
+render();
+</script></body></html>
